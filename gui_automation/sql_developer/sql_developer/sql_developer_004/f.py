@@ -95,13 +95,15 @@ def wait_and_dismiss_usage_tracking():
                 dlg.capture_as_image().save(final_path)
                 print(f"💾 Screenshot before keys saved: {final_path}")
 
-                # Focus and move mouse to dialog to enforce real foreground
+                # Focus, move mouse, and click to enforce focus in Java dialog
                 dlg.set_focus()
                 rect = dlg.rectangle()
                 center_x = (rect.left + rect.right) // 2
                 center_y = (rect.top + rect.bottom) // 2
                 pyautogui.moveTo(center_x, center_y)
-                time.sleep(1)
+                time.sleep(0.5)
+                pyautogui.click()  # Required to ensure Java dialog receives focus
+                time.sleep(0.5)
 
                 # Send Tab, Tab, Enter
                 print("⌨️ Sending TAB, TAB, ENTER via pyautogui...")
