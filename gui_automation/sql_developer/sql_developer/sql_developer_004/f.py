@@ -95,9 +95,15 @@ def wait_and_dismiss_usage_tracking():
                 dlg.capture_as_image().save(final_path)
                 print(f"💾 Screenshot before keys saved: {final_path}")
 
-                # Focus and send Tab, Tab, Enter
+                # Focus and move mouse to dialog to enforce real foreground
                 dlg.set_focus()
-                time.sleep(5)
+                rect = dlg.rectangle()
+                center_x = (rect.left + rect.right) // 2
+                center_y = (rect.top + rect.bottom) // 2
+                pyautogui.moveTo(center_x, center_y)
+                time.sleep(1)
+
+                # Send Tab, Tab, Enter
                 print("⌨️ Sending TAB, TAB, ENTER via pyautogui...")
                 pyautogui.press('tab')
                 pyautogui.press('tab')
