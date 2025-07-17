@@ -80,21 +80,28 @@ def wait_and_dismiss_usage_tracking():
             if dlg.exists(timeout=1):
                 print(f"🪟 Found 'Oracle Usage Tracking' on attempt {attempt+1}")
 
-                # Screenshot before interacting
+                # Screenshot when window is first detected
                 desktop_path = os.path.join(os.environ["USERPROFILE"], "Desktop")
-                usage_path = os.path.join(desktop_path, "oracle_usage_tracking_prompt.png")
-                dlg.capture_as_image().save(usage_path)
-                print(f"💾 Screenshot saved: {usage_path}")
+                early_path = os.path.join(desktop_path, "oracle_usage_tracking_prompt_early.png")
+                dlg.capture_as_image().save(early_path)
+                print(f"💾 Screenshot saved: {early_path}")
 
-                # Wait fixed 30 seconds for dialog to fully render
+                # Wait 30 seconds for dialog to fully render
                 print("⏳ Waiting 30 seconds for dialog to finish rendering...")
                 time.sleep(30)
 
-                # Send TAB x2 + ENTER to activate OK
+                # Screenshot before sending keys
+                final_path = os.path.join(desktop_path, "oracle_usage_tracking_prompt_before_keys.png")
+                dlg.capture_as_image().save(final_path)
+                print(f"💾 Screenshot before keys saved: {final_path}")
+
+                # Focus and send Tab, Tab, Enter
                 dlg.set_focus()
                 time.sleep(0.5)
-                print("⌨️ Sending {TAB}{TAB}{ENTER}...")
-                send_keys('{TAB}{TAB}{ENTER}')
+                print("⌨️ Sending TAB, TAB, ENTER via pyautogui...")
+                pyautogui.press('tab')
+                pyautogui.press('tab')
+                pyautogui.press('enter')
                 print("✅ Oracle Usage Tracking dialog dismissed.")
                 return
         except Exception as e:
