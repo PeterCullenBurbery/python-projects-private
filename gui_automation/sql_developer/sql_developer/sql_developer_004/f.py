@@ -74,30 +74,29 @@ def wait_and_handle_import_prompt():
 
 def wait_and_dismiss_usage_tracking():
     print("⏳ Waiting for 'Oracle Usage Tracking' dialog...")
-    for attempt in range(30):
+    for attempt in range(30):  # wait up to 30 seconds
         try:
-            dlg = Desktop(backend="uia").window(title="Oracle Usage Tracking", class_name="SunAwtDialog")
+            dlg = Desktop(backend="win32").window(title="Oracle Usage Tracking", class_name="SunAwtDialog")
             if dlg.exists(timeout=1):
                 print(f"🪟 Found 'Oracle Usage Tracking' on attempt {attempt+1}")
 
+                # Screenshot
                 desktop_path = os.path.join(os.environ["USERPROFILE"], "Desktop")
                 usage_path = os.path.join(desktop_path, "oracle_usage_tracking_prompt.png")
                 dlg.capture_as_image().save(usage_path)
                 print(f"💾 Screenshot saved: {usage_path}")
 
-                ok_btn = dlg.child_window(title="OK", control_type="Button")
-                if ok_btn.exists():
-                    print("👉 Clicking 'OK' button...")
-                    dlg.set_focus()
-                    time.sleep(0.5)
-                    ok_btn.click_input()
-                    print("✅ 'OK' clicked.")
-                    return
-                else:
-                    print("⚠️ OK button not found.")
+                # Send TAB twice and then ENTER
+                dlg.set_focus()
+                time.sleep(0.5)
+                print("⌨️ Sending {TAB}{TAB}{ENTER} to dismiss dialog...")
+                send_keys('{TAB}{TAB}{ENTER}')
+                print("✅ Sent keys to dismiss Oracle Usage Tracking.")
+                return
         except Exception as e:
             print(f"⚠️ Exception: {e}")
         time.sleep(1)
+
     print("❌ Oracle Usage Tracking dialog not found within timeout.")
 
 def main():
