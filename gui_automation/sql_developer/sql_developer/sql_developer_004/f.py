@@ -97,7 +97,7 @@ def wait_and_dismiss_usage_tracking():
 
                 # Focus and send Tab, Tab, Enter
                 dlg.set_focus()
-                time.sleep(0.5)
+                time.sleep(5)
                 print("⌨️ Sending TAB, TAB, ENTER via pyautogui...")
                 pyautogui.press('tab')
                 pyautogui.press('tab')
